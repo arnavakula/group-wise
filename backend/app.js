@@ -25,7 +25,7 @@ db.once('open', () => {
 // ------------ ROUTES START HERE ------------ //
 
 //user reg
-app.post('/user', async (req, res) => {
+app.post('/user/register', async (req, res) => {
     const { username, email, password, major, timePreference } = req.body;
 
     //check if user already exists 
@@ -44,6 +44,32 @@ app.post('/user', async (req, res) => {
     } catch(err) {
         console.log(err);
         res.status(500).json({ message: 'error in user reg', err });
+    }
+})
+
+//user login
+app.post('/user/login', async (req, res) => {
+    //TODO change to normal reg by username and email reg by google oaauth if ther eis time
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        
+        if(user){
+            const isValidLogin = await user.verify(password);
+
+            if(!isValidLogin){
+                res.status(400).json({ message: 'bad user credentials go away' });
+            } else {
+                const jwtToken = jwt.sign({ userId:user.id }, JWT_SECRET, { expiresIn: '24h' });
+                res.status(200).json({ message: 'successful login yipyp', token: jwtToken })
+            }
+        } else {
+            res.status(400).json({ message: 'invalid credentials - you dont exist' });
+        }
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ message: 'server error while logging in', err });
     }
 })
 

@@ -40,7 +40,7 @@ UserSchema.pre('save', async function (next) {
 });
 
 //verify password
-UserSchema.method.verify = async function (inputPassword){
+UserSchema.methods.verify = async function (inputPassword){
     return await bcrypt.compare(inputPassword, this.password);
 }
 
