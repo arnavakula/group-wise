@@ -80,28 +80,51 @@ app.post('/user/login', async (req, res) => {
 })
 
 app.post('/study-group/create', authMiddleware, async (req, res) => {
-    res.status(201).json({ message: 'hi' });
-    // const { groupName, subject, timePreference, description, numMembers, isOpen } = req.body;
-    // const { userId } = req.user;
+    const { groupName, subject, timePreference, description, numMembers, isOpen } = req.body;
+    const { userId } = req.user;
 
-    // try { 
-    //     const studyGroup = new StudyGroup({ 
-    //         groupName, 
-    //         subject,
-    //         timePreference, 
-    //         description, 
-    //         numMembers, 
-    //         isOpen,
-    //         creator: userId,
-    //         members: [userId]
-    //         })
+    try { 
+        const studyGroup = new StudyGroup({ 
+            groupName, 
+            subject,
+            timePreference, 
+            description, 
+            numMembers, 
+            isOpen,
+            creator: userId,
+            members: [userId]
+            })
         
-    //     await studyGroup.save();
-    //     res.status(201).json({ message: `created ${groupName} study group` });
-    // } catch {
-        
-    // }
+        await studyGroup.save();
+        res.status(201).json({ message: `created ${groupName} study group` });
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ message: 'server error in making study group :( ', err })
+    }
+})
 
+app.post('/study-group/join/:studyGroupId', authMiddleware, async (req, res) => {
+    const { studyGroupId } = req.params;
+    const { userId } = req.user;
+
+    try {
+        const studyGroup = await StudyGroup.findById(studyGroupId);
+
+        if(studyGroup){
+            if(!studyGroup.members.includes(userId)){
+                studyGroup.members.push(userId);
+                await studyGroup.save();
+                res.status(200).json({ message: 'joined succcessfully!' });
+            } else {
+                res.status(400).json({ message: 'already a member of this group!' });
+            }
+        } else { 
+            res.status(400).json({ message: 'group does not exist' })
+        }
+    } catch(err){
+        console.log(err);
+        res.status(500).json({ message: 'server error in joining study group', err});
+    }
 })
 
 //default home route
