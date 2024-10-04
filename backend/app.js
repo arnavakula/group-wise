@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const User = require('./models/User');
 const StudyGroup = require('./models/StudyGroup');
+const wrapAsync = require('./middleware/wrapAsync');
 
 const authMiddleware = require('./middleware/auth');
 
@@ -129,7 +130,7 @@ app.post('/study-group/join/:studyGroupId', authMiddleware, async (req, res) => 
     }
 })
 
-//get all study groups
+//get all study groups (with filter)
 app.get('/study-group', async (req, res) => {
     //get relevant filter queries
     const { timePreference, isOpen, subject } = req.query;
