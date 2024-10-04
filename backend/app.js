@@ -19,6 +19,13 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
+//cors
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
+
+
 // connect to our db
 mongoose.connect('mongodb://127.0.0.1:27017/groupwise');
 const db = mongoose.connection;
