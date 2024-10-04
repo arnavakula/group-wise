@@ -139,15 +139,12 @@ app.post('/study-group/join/:studyGroupId', authMiddleware, async (req, res) => 
 //get all study groups (with filter)
 app.get('/study-group', async (req, res) => {
     //get relevant filter queries
-    const { timePreference, isOpen, subject } = req.query;
+    const { timePreference, subject } = req.query;
     
     //group filters
     let filters = {};
     if(subject){
         filters = {...filters, subject};
-    }
-    if(isOpen){
-        filters = {...filters, isOpen};
     }
     if(timePreference){
         filters = {...filters, timePreference};

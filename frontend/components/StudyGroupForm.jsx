@@ -29,8 +29,14 @@ const StudyGroupForm = () => {
             }
         );
 
-        console.log(response);
+        setFormData({
+            groupName: '',
+            description: '',
+            subject: '',
+            timePreference: '',
+        });
 
+        console.log(response);
     };
 
     return (
