@@ -2,8 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('./models/User');
 const cors = require('cors');
+
+const User = require('./models/User');
+const StudyGroup = require('./models/StudyGroup');
+
+const authMiddleware = require('./middleware/auth');
 
 const JWT_SECRET = 'test_key'
 
@@ -23,6 +27,8 @@ db.once('open', () => {
 });
 
 // ------------ ROUTES START HERE ------------ //
+
+//get specific user
 
 //user reg
 app.post('/user/register', async (req, res) => {
@@ -71,6 +77,31 @@ app.post('/user/login', async (req, res) => {
         console.log(err);
         res.status(500).json({ message: 'server error while logging in', err });
     }
+})
+
+app.post('/study-group/create', authMiddleware, async (req, res) => {
+    res.status(201).json({ message: 'hi' });
+    // const { groupName, subject, timePreference, description, numMembers, isOpen } = req.body;
+    // const { userId } = req.user;
+
+    // try { 
+    //     const studyGroup = new StudyGroup({ 
+    //         groupName, 
+    //         subject,
+    //         timePreference, 
+    //         description, 
+    //         numMembers, 
+    //         isOpen,
+    //         creator: userId,
+    //         members: [userId]
+    //         })
+        
+    //     await studyGroup.save();
+    //     res.status(201).json({ message: `created ${groupName} study group` });
+    // } catch {
+        
+    // }
+
 })
 
 //default home route

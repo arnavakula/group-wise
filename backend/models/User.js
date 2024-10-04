@@ -20,15 +20,19 @@ const UserSchema = mongoose.Schema({
         required: true,
         minLength: 2
     },
+    year: {
+        type: Number,
+        required: true,
+    },
     major: {
         type: String,
         required: true
     },
     timePreference: {
         type: String,
-        enum: ['Morning', 'Afternoon', 'Evening', 'Night']
+        enum: ['Morning', 'Afternoon', 'Evening', 'Night', 'No Preference']
     }
-})
+});
 
 //hash password with bycrypt before user registration
 UserSchema.pre('save', async function (next) {
