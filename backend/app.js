@@ -79,6 +79,7 @@ app.post('/user/login', async (req, res) => {
     }
 })
 
+//create a study group
 app.post('/study-group/create', authMiddleware, async (req, res) => {
     const { groupName, subject, timePreference, description, numMembers, isOpen } = req.body;
     const { userId } = req.user;
@@ -103,6 +104,7 @@ app.post('/study-group/create', authMiddleware, async (req, res) => {
     }
 })
 
+//join a study group
 app.post('/study-group/join/:studyGroupId', authMiddleware, async (req, res) => {
     const { studyGroupId } = req.params;
     const { userId } = req.user;
@@ -119,7 +121,7 @@ app.post('/study-group/join/:studyGroupId', authMiddleware, async (req, res) => 
                 res.status(400).json({ message: 'already a member of this group!' });
             }
         } else { 
-            res.status(400).json({ message: 'group does not exist' })
+            res.status(400).json({ message: 'group does not exist' });
         }
     } catch(err){
         console.log(err);
@@ -127,16 +129,99 @@ app.post('/study-group/join/:studyGroupId', authMiddleware, async (req, res) => 
     }
 })
 
+//get all study groups
+app.get('/study-group', async (req, res) => {
+    //get relevant filter queries
+    const { timePreference, isOpen, subject } = req.query;
+    
+    //group filters
+    let filters = {};
+    if(subject){
+        filters = {...filters, subject};
+    }
+    if(isOpen){
+        filters = {...filters, isOpen};
+    }
+    if(timePreference){
+        filters = {...filters, timePreference};
+    }
+    
+    const studyGroups = await StudyGroup.find(filters).populate('members creator');
+    res.status(200).json({ message: 'found all study groups', studyGroups });
+})
+
+//get all of a certain users study groups
+app.get('/study-group/user', authMiddleware, async (req, res) => {
+    const { userId } = req.user;
+    try {
+        const userGroups = await StudyGroup.find({ $or: 
+            [
+                { creator: userId },
+                { members: userId, creator: { $ne: userId } }
+            ]
+        }).populate('members creator');
+
+        res.status(400).json({ message: 'found user study groups', userGroups});
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ message: 'server error while getting user study groups' });
+    }
+})
+
+//leave study group
+app.post('/study-group/leave/:studyGroupId', authMiddleware, async (req, res) => {
+    const { studyGroupId } = req.params;
+    const { userId } = req.user;
+    try {
+        const studyGroup = await StudyGroup.findById(studyGroupId); 
+
+        if(!studyGroup){
+            res.status(404).json({ message: `study group ${studyGroupId} not found` })
+        } else {
+            studyGroup.members = studyGroup.members.filter(member => member.toString() !== userId);
+            await studyGroup.save();
+            
+            res.status(200).json({ message: 'successfully left study group' });
+        }
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ message: 'server error while leaving study group', err });
+    }
+})
+
+app.delete('/study-group/:studyGroupId', authMiddleware, async (req, res) => {
+    const { studyGroupId } = req.params;
+    const { userId } = req.user;
+    try {
+        const studyGroup = await StudyGroup.findById(studyGroupId);
+
+        if(!studyGroup){
+            res.status(404).json({ message: `study group ${studyGroupId} not found` });
+        } else {
+            //check that current user created the initial study group
+            if(studyGroup.creator.toString() === userId){
+                await StudyGroup.findByIdAndDelete(studyGroupId);
+                res.status(200).json({ message: `successfully deleted study group ${studyGroupId}` });
+            } else {
+                res.status(403).json({ message: 'you are UNAUTHORIZED to delete this study group >:(' });
+            }
+        }
+    } catch(err){
+        res.status(500).json({ message: 'delete study group', err: err.toString() });
+    }
+})
+
+
 //default home route
 app.get('/', (req, res) => {
-    res.json({ message: 'welcome to group wise!' })
+    res.json({ message: 'welcome to group wise!' });
 })
 
 app.all('*', (req, res, next) => {
     console.log('FALLBACK ERROR');
     next();
 })
-
 
 //run express app
 app.listen(8000, () => {
