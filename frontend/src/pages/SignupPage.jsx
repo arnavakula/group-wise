@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -18,9 +20,7 @@ const SignupPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log(formData);
-
-        const response = await axios.post(
+        const registerResponse = await axios.post(
             `${import.meta.env.VITE_BACKEND_URL}/user/register`, 
             formData, 
             { 
@@ -28,8 +28,16 @@ const SignupPage = () => {
             }
         );
 
-        console.log(response.data);
-        // console.log('Form submitted:', formData);
+        const loginResponse = await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/user/login`, 
+            { email: formData.email, password: formData.password },
+            { 
+                withCredentials: true 
+            }
+        );
+
+        localStorage.setItem('token', loginResponse.data.token);   
+        navigate('/dashboard');
     };
 
     return (
