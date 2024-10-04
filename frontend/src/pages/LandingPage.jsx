@@ -1,17 +1,33 @@
 import { Link } from 'react-router-dom';
 import LandingImage from '../assets/images/landing-image.png';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useState } from 'react';
 
 const LandingPage = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('token') !== null);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+    }
+
     return (
         <>
             <div className='max-h-[100vh] md:px-10'>
                 <nav className='w-full h-[10vh] flex justify-between items-center px-6'>
                     <h3 className='font-lato font-bold text-[1.4rem] lg:text-[2rem]'>GroupWise</h3>
                     <div className='flex gap-[4vw] font-openSans text-[1.1rem] lg:text-[1.4rem]'>
-                        <Link to='/signup'><h3>Signup</h3></Link>
-                        <h3>Login</h3>
-                        <h3>Dashboard</h3>
+                        {!isLoggedIn ? (
+                            <>
+                            <Link to='/signup'><h3>Signup</h3></Link>
+                            <Link to='/login'><h3>Login</h3></Link>
+                            </>
+                        ) : (
+                            <h3 onClick={handleLogout} className='cursor-pointer'>Logout</h3>
+                        )}
+                        
+                        
+                        <Link to='/dashboard'><h3>Dashboard</h3></Link>
                     </div>
                 </nav>
                 <div className='flex flex-col px-4 gap-[2vh] lg:flex-row lg:justify-between lg:mt-10'>
@@ -25,10 +41,12 @@ const LandingPage = () => {
                         />
                     </div>
                 </div>
-                <div className='ml-4 w-[60%] lg:max-w-[30vw] border border-black h-[8vh] text-left flex items-center px-4 justify-between cursor-pointer'>
-                    <h3 className='font-lato text-[1.4rem]'>Get started for free</h3>
-                    <ChevronRightIcon fontSize='large'/>
-                </div>
+                <Link to='/signup'>
+                    <div className='ml-4 w-[60%] lg:max-w-[30vw] border border-black h-[8vh] text-left flex items-center px-4 justify-between '>
+                        <h3 className='font-lato text-[1.4rem]'>Get started for free</h3>
+                        <ChevronRightIcon fontSize='large'/>
+                    </div>
+                </Link>
             </div>
         </>
     )

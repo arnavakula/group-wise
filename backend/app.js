@@ -90,7 +90,7 @@ app.post('/user/login', async (req, res) => {
 
 //create a study group
 app.post('/study-group/create', authMiddleware, async (req, res) => {
-    const { groupName, subject, timePreference, description, numMembers, isOpen } = req.body;
+    const { groupName, subject, timePreference, description } = req.body;
     const { userId } = req.user;
 
     try { 
@@ -99,8 +99,6 @@ app.post('/study-group/create', authMiddleware, async (req, res) => {
             subject,
             timePreference, 
             description, 
-            numMembers, 
-            isOpen,
             creator: userId,
             members: [userId]
             })

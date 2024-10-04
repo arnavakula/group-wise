@@ -9,14 +9,6 @@ const StudyGroupSchema = mongoose.Schema({
         type: String, 
         required: true
     },
-    isOpen: {
-        type: Boolean,
-        default: true
-    },
-    numMembers: {
-        type: Number,
-        default: 4
-    },
     members: [
         {
             type: mongoose.SchemaTypes.ObjectId,
