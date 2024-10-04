@@ -15,7 +15,6 @@ const JWT_SECRET = 'test_key'
 app = express();
 
 //middlware
-app.use(cors());
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
@@ -40,6 +39,8 @@ db.once('open', () => {
 
 //user reg
 app.post('/user/register', async (req, res) => {
+    console.log('hii');
+    console.log(req.body);
     const { username, email, password, major, timePreference } = req.body;
 
     //check if user already exists 

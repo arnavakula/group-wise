@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import LandingImage from '../assets/images/landing-image.png';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
@@ -8,7 +9,7 @@ const LandingPage = () => {
                 <nav className='w-full h-[10vh] flex justify-between items-center px-6'>
                     <h3 className='font-lato font-bold text-[1.4rem] lg:text-[2rem]'>GroupWise</h3>
                     <div className='flex gap-[4vw] font-openSans text-[1.1rem] lg:text-[1.4rem]'>
-                        <h3>Signup</h3>
+                        <Link to='/signup'><h3>Signup</h3></Link>
                         <h3>Login</h3>
                         <h3>Dashboard</h3>
                     </div>

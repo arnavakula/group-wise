@@ -22,7 +22,6 @@ const UserSchema = mongoose.Schema({
     },
     year: {
         type: Number,
-        required: true,
     },
     major: {
         type: String,

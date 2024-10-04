@@ -3,25 +3,12 @@ import axios from 'axios';
 
 const SignupPage = () => {
     const [formData, setFormData] = useState({
-        name: '',
+        username: '',
         email: '',
         password: '',
         major: '',
         timePreference: '',
     });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/study-group`);
-                console.log(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,7 +17,19 @@ const SignupPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
+
+        console.log(formData);
+
+        const response = await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/user/register`, 
+            formData, 
+            { 
+                withCredentials: true 
+            }
+        );
+
+        console.log(response.data);
+        // console.log('Form submitted:', formData);
     };
 
     return (
@@ -39,11 +38,11 @@ const SignupPage = () => {
                 <h2 className='text-2xl font-semibold mb-6 text-center'>Sign Up</h2>
                 <form onSubmit={handleSubmit}>
                     <div className='mb-4'>
-                        <label htmlFor='name' className='block text-sm font-medium text-gray-700'>Name:</label>
+                        <label htmlFor='username' className='block text-sm font-medium text-gray-700'>Name:</label>
                         <input
                             type='text'
-                            id='name'
-                            name='name'
+                            id='username'
+                            name='username'
                             value={formData.name}
                             onChange={handleChange}
                             required
@@ -97,10 +96,10 @@ const SignupPage = () => {
                             className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-200'
                         >
                             <option value=''>Select...</option>
-                            <option value='morning'>Morning</option>
-                            <option value='afternoon'>Afternoon</option>
-                            <option value='evening'>Evening</option>
-                            <option value='night'>Night</option>
+                            <option value='Morning'>Morning</option>
+                            <option value='Afternoon'>Afternoon</option>
+                            <option value='Evening'>Evening</option>
+                            <option value='Night'>Night</option>
                         </select>
                     </div>
                     <button
