@@ -3,9 +3,9 @@ import LandingPage from './pages/LandingPage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
-import Explore from '../components/Explore';
-import Profile from '../components/Profile';
-import StudyGroupForm from '../components/StudyGroupForm';
+import Explore from './components/Explore';
+import Profile from './components/Profile';
+import StudyGroupForm from './components/StudyGroupForm';
 
 function App() {
 

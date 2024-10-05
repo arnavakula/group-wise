@@ -165,7 +165,7 @@ app.get('/study-group/user', authMiddleware, async (req, res) => {
             ]
         }).populate('members creator');
 
-        res.status(400).json({ message: 'found user study groups', userGroups});
+        res.status(200).json({ message: 'found user study groups', userGroups});
 
     } catch(err) {
         console.log(err);

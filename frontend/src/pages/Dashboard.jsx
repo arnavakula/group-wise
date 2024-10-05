@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
 import Person2Icon from '@mui/icons-material/Person2';
@@ -7,41 +7,37 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import DashboardImage from '../assets/images/dashboard-image.png';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../assets/styles/Dashboard.css';
 
 const Dashboard = () => {
+    const location = useLocation();
 
     return (
-        <>
-        <div className='w-[100vw] py-8'>
-            <div className='flex justify-between px-6'>
-                <Link to='/' className='items-center'><ArrowBackIcon /></Link>
+        <div className='flex flex-col items-center'>
+        <div className='container'>
+            <div className='nav'>
+                <Link to='/' className='nav-back'><ArrowBackIcon /></Link>
             </div>
-            <div>
-                <img src={DashboardImage} />
+            <div className='dashboard-image-container'>
+                <img className='dashboard-image' src={DashboardImage} alt="Dashboard" />
             </div>
-            <div className='my-auto flex justify-center gap-[10%] w-full px-8 '>
-                <Link to='/dashboard/' >
-                    <div className='flex items-center gap-[1vw]'>
-                        <ExploreIcon />
-                        <h3>Explore</h3>
-                    </div>
+            <div className='links-container'>
+                <Link to='/dashboard/' className={`link-item ${location.pathname === '/dashboard/' ? 'active' : ''}`}>
+                    <ExploreIcon />
+                    <h3>Explore</h3>
                 </Link>
-               <Link to='/dashboard/profile' >
-                    <div className='flex items-center'>
-                        <Person2Icon />
-                        <h3>Your Groups</h3>
-                    </div>
+                <Link to='/dashboard/profile' className={`link-item ${location.pathname === '/dashboard/profile' ? 'active' : ''}`}>
+                    <Person2Icon />
+                    <h3>Your Groups</h3>
                 </Link>
-               <Link to='/dashboard/create' >
-                    <div className='flex items-center'>
-                        <AddIcon />
-                        <h3>Create</h3>
-                    </div>
+                <Link to='/dashboard/create' className={`link-item ${location.pathname === '/dashboard/create' ? 'active' : ''}`}>
+                    <AddIcon />
+                    <h3>Create</h3>
                 </Link>
             </div>
             <Outlet />
         </div>
-        </>
+        </div>
     )
 }
 
