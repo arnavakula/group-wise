@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const StudyGroupForm = () => {
+    const navigate = useNavigate();
+    
     const [formData, setFormData] = useState({
         groupName: '',
         description: '',
@@ -37,6 +40,7 @@ const StudyGroupForm = () => {
         });
 
         console.log(response);
+        navigate('/dashboard');
     };
 
     return (

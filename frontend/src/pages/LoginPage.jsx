@@ -26,6 +26,7 @@ const LoginPage = () => {
         );
 
         localStorage.setItem('token', loginResponse.data.token);
+        localStorage.setItem('email', formData.email);
         console.log(localStorage.getItem('token'));
         navigate('/dashboard');
     };

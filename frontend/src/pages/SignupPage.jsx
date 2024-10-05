@@ -36,6 +36,7 @@ const SignupPage = () => {
             }
         );
 
+        localStorage.setItem('email', formData.email);
         localStorage.setItem('token', loginResponse.data.token);   
         navigate('/dashboard');
     };

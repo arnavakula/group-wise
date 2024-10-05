@@ -8,7 +8,6 @@ import Profile from './components/Profile';
 import StudyGroupForm from './components/StudyGroupForm';
 
 function App() {
-
   return (
     <>
     <BrowserRouter>

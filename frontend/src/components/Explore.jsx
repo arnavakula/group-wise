@@ -15,6 +15,24 @@ const Explore = () => {
         setFilters({ ...filters, [name]: value });
     };
 
+    const handleLeave = async (studyGroupId) => {
+        console.log(localStorage.getItem('token'));
+        
+        const response = await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/study-group/leave/${studyGroupId}`, 
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                },
+                withCredentials: true 
+            }
+        );
+
+        setFilters({...filters});
+        console.log(response);
+    }
+
     useEffect(() => {
         const loadFilters = async () => {
             try {
@@ -95,6 +113,15 @@ const Explore = () => {
                     <h3>{group.groupName}</h3>
                     <p>Time Preference: {group.timePreference}</p>
                     <p>Subject: {group.subject}</p>
+                    {group.members.some(member => member.email === localStorage.getItem('email')) ? (
+                        <>
+                        <button onClick={() => handleLeave(group._id)} className="leave-button">Leave</button>
+                        </>
+                    ): (
+                        <>
+                        <button className="join-button">Join</button>
+                        </>
+                    )}
                 </div>
             ))}
         </div>
